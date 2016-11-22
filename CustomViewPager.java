@@ -1,5 +1,3 @@
-package com.sai.customviewpagersample;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Handler;
