@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.Scroller;
 
-
 import java.lang.reflect.Field;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,10 +23,13 @@ public class CustomViewPager extends ViewPager {
 
     private boolean autoScrollEnable = true;
     private boolean enableOnlyOneRoundOfScrolling = false;
+    private boolean disableFingerScroll = false;
 
     private Timer timer;
 
-    private int timerDelay = 2500; // default set time
+    private int timerDelay = 2500; // (ms) delay of the timer for getting the viewpager to scroll to next position
+
+    private int pageScrollDuration = 800; // (ms) duration of pager to scroll to next page
 
     private PagerAdapter adapter;
 
@@ -37,10 +39,10 @@ public class CustomViewPager extends ViewPager {
     public CustomViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomViewPagerAttrs, 0, 0);
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ImagesViewPagerAttrs, 0, 0);
 
 
-        enableOnlyOneRoundOfScrolling = a.getBoolean(R.styleable.CustomViewPagerAttrs_enableOnlyOneRoundOfScrolling, false);
+        enableOnlyOneRoundOfScrolling = a.getBoolean(R.styleable.ImagesViewPagerAttrs_enable_only_one_round_of_scrolling, false);
 
         if (enableOnlyOneRoundOfScrolling) {
 
@@ -48,9 +50,12 @@ public class CustomViewPager extends ViewPager {
 
         } else {
 
-            autoScrollEnable = a.getBoolean(R.styleable.CustomViewPagerAttrs_autoScroll, false);
+            autoScrollEnable = a.getBoolean(R.styleable.ImagesViewPagerAttrs_auto_scroll, false);
 
         }
+
+        disableFingerScroll = a.getBoolean(R.styleable.ImagesViewPagerAttrs_disable_finger_scroll,false);
+
 
         a.recycle();
 
@@ -82,7 +87,7 @@ public class CustomViewPager extends ViewPager {
 
 
     public void setTimerDelay(int delayInMilliSec) {
-        if (delayInMilliSec > 800) { // min delay must be 801ms, because scroller delay is 800ms
+        if (delayInMilliSec > pageScrollDuration) { // min delay must be 801ms, because scroller delay is 800ms
             timerDelay = delayInMilliSec;
             setTimer(true);
         }
@@ -166,6 +171,11 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+
+        if (disableFingerScroll)
+            return false;
+
+
         int action = MotionEventCompat.getActionMasked(ev);
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
@@ -186,6 +196,10 @@ public class CustomViewPager extends ViewPager {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
+
+        if (disableFingerScroll)
+            return false;
+
         int action = MotionEventCompat.getActionMasked(ev);
         switch (action) {
             case MotionEvent.ACTION_CANCEL:
@@ -222,7 +236,7 @@ public class CustomViewPager extends ViewPager {
 
         @Override
         public void startScroll(int startX, int startY, int dx, int dy, int duration) {
-            super.startScroll(startX, startY, dx, dy, 800 /* 1 secs */);
+            super.startScroll(startX, startY, dx, dy, pageScrollDuration);
         }
     }
 
