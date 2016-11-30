@@ -4,7 +4,7 @@ Auto Scrolling View Pager with touch events handled.
 
 Also can be customized for setting the timer delay.
 
-Add below code in the attrs.xml file for setting the 'autoScroll' and 'enableOnlyOneRoundOfScrolling' in the xml itself 
+Add below code in the attrs.xml file for setting the 'auto_scroll', 'enable_only_one_round_of_scrolling' and 'disable_finger_scroll' in the xml itself 
     
     <declare-styleable name="ImagesViewPagerAttrs">
         <attr name="auto_scroll" format="boolean" /> //default true
