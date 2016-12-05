@@ -68,7 +68,7 @@ public class CustomViewPager extends ViewPager {
             @Override
             public void onPageSelected(int position) {
 
-                if (position == adapter.getCount() - 1 && enableOnlyOneRoundOfScrolling) {
+                if (adapter!= null && position == adapter.getCount() - 1 && enableOnlyOneRoundOfScrolling) {
                     //stop timer
                     setTimer(false);
                 }
